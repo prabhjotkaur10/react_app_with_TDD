@@ -17,7 +17,7 @@ class EditUser extends Component{
           <div className="row">
             <div className="col-md-6 col-md-offset-3">
               <div className="panel panel-primary">
-                <div className="panel-heading">Sign In</div>
+                <div className="panel-heading">Edit User Details</div>
                 <div className="panel-body">
                   <form>
                   	<div className="form-group">

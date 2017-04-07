@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Router, Route } from 'react-router';
+import { Link, Router, Route } from 'react-router';
 const baseUrl = 'http://localhost:4000';
-import {Link} from 'react-router';
 
 class UserList extends Component{
   constructor(props){
@@ -48,9 +47,7 @@ class UserList extends Component{
         headers: {'x-access-token': token}
       })
       .then(function (response) {
-        console.log(response.data);
         self.setState({users:response.data});
-        // console.log(self.state.users)
       })
       .catch(function (error) {
         console.log(error);
@@ -61,7 +58,10 @@ class UserList extends Component{
     }
   }
   componentWillUnmount() {
-    this.serverRequest.abort();
+    if(typeof this.serverRequest.abort=='function'){
+      this.serverRequest.abort();
+    }
+
   }
 
   deleteUser(){

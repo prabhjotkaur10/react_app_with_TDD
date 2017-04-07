@@ -6,7 +6,7 @@ import { Router, Route } from 'react-router';
 class SignInUser extends Component{
   constructor(props){
     super(props);
-    this.state={phone_number:'',password:''};
+    this.state={phone_number:'',password:'',error:''};
   }
 
   render(){
@@ -28,6 +28,7 @@ class SignInUser extends Component{
                       <input className="form-control" type="password" value={this.state.password} onChange={event=>this.setState({password:event.target.value})}/>
                     </div>
                     <button type="button" className="btn btn-success" onClick={event=>this.signIn(event)}>Sign In</button>
+                    <span className="error pull-right">{this.state.error}</span>
                   </form>
                 </div>
               </div>
@@ -46,14 +47,17 @@ class SignInUser extends Component{
     .then(function (response) {
       let res = response.data;
       if(res.data.success==true){
-        self.setState({phone_number:'',password:''});
+        self.setState({phone_number:'',password:'',error:''});
         localStorage.setItem('token',res.data.token);
         //redirection to user-list page
-        self.context.router.push('/user-list');
+        self.context.router.push('/user/user-list');
+      }
+      else{
+        self.setState({error:'Wrong phone number or password'});
       }
     })
     .catch(function (error) {
-      console.log(error);
+      self.setState({error:error});
     });
   }
 }

@@ -11,6 +11,7 @@ import App from './components/app';
 import Signup from './components/sign_up';
 import Signin from './components/sign_in';
 import Userlist from './components/user_list';
+import TopNavLoggedIn from './components/top_nav_logged_in';
 import EditUser from './components/edit_user';
 
 
@@ -23,8 +24,12 @@ render((
       <IndexRoute component={Signup}/>
       <Route path="sign-up" component={Signup}/>
       <Route path="sign-in" component={Signin}/>
-      <Route path="user-list" component={Userlist}/>
     </Route>
+    <Route path="/user" component={TopNavLoggedIn}>
+      <Route path="user-list" component={Userlist}/>
+      <Route path="edit-user/:id" component={EditUser}/>
+    </Route>
+
 
 
 
