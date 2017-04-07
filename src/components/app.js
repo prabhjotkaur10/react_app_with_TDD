@@ -7,7 +7,7 @@ export default class App extends Component {
     return (
       <div>
         <TopNav/>
-        {this.props.children || <SignUpUser/>}
+        {this.props.children}
       </div>
     );
   }
