@@ -24,7 +24,6 @@ render((
       <Route path="sign-up" component={Signup}/>
       <Route path="sign-in" component={Signin}/>
       <Route path="user-list" component={Userlist}/>
-      <Route path="edit-user" component={EditUser}/>
     </Route>
 
 

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import { Router, Route } from 'react-router';
 const baseUrl = 'http://localhost:4000';
+import {Link} from 'react-router';
 
 class UserList extends Component{
   constructor(props){
@@ -11,6 +12,7 @@ class UserList extends Component{
   }
 
   render(){
+    var self = this;
     return (
       <div>
         <div className="container">
@@ -21,8 +23,9 @@ class UserList extends Component{
                  return <li key={user.id} className="list-group-item clearfix">
                   <div className="pull-left">{user.name}</div>
                   <div className="pull-right">
-                    <button type="button" className="btn btn-danger" onClick={event=>this.submitForm(event)}>Delete</button>
-                    <button type="button" className="btn btn-info" onClick={event=>this.goToEditUser(event)}>Edit</button>
+                    {/*<button type="button" className="btn btn-info" onClick={event => self.goToEditUser(user.id)}>Edit</button>*/}
+                    <button type="button" className="btn btn-danger" onClick={event=> self.deleteUser(event)}>Delete</button>
+                    <Link className="btn btn-info" to={'/user/edit-user/'+user.id}>Edit</Link>
                   </div>
                 </li>
               })}
@@ -59,6 +62,10 @@ class UserList extends Component{
   }
   componentWillUnmount() {
     this.serverRequest.abort();
+  }
+
+  deleteUser(){
+    console.log('delete');
   }
 
   goToEditUser(){
