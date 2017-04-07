@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route } from 'react-router';
 const baseUrl = 'http://localhost:4000';
 
 class UserList extends Component{
@@ -22,7 +22,7 @@ class UserList extends Component{
                   <div className="pull-left">{user.name}</div>
                   <div className="pull-right">
                     <button type="button" className="btn btn-danger" onClick={event=>this.submitForm(event)}>Delete</button>
-                    <button type="button" className="btn btn-info" onClick={event=>this.submitForm(event)}>Edit</button>
+                    <button type="button" className="btn btn-info" onClick={event=>this.goToEditUser(event)}>Edit</button>
                   </div>
                 </li>
               })}
@@ -33,6 +33,7 @@ class UserList extends Component{
       </div>
     );
   }
+
   componentDidMount() {
     // Is there a React-y way to avoid rebinding `this`? fat arrow?
     var self = this;
@@ -51,7 +52,7 @@ class UserList extends Component{
       });
     }
     else{
-      hashHistory.push('/sign-in');
+      self.context.router.push('/sign-in');
     }
   }
   componentWillUnmount() {
@@ -60,6 +61,17 @@ class UserList extends Component{
     }
 
   }
+
+  goToEditUser(){
+    this.context.router.push('/edit-user');
+  }
 }
+
+//You have to define the contextTypes as follows right beneath your component:
+//to avoid this waring : Warning: [react-router] props.history and context.history are deprecated. Please use context.router
+//this comes when we try to redirect with this.context.router.push
+UserList.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 
 export default UserList;

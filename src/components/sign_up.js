@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route } from 'react-router';
 const baseUrl = 'http://localhost:4000';
 
 class SignUpUser extends Component{
@@ -50,11 +50,11 @@ class SignUpUser extends Component{
     })
     .then(function (response) {
       let res = response.data;
-      console.log(res);
       if(res.data.success==true){
         self.setState({name:'',phone_number:'',password:''});
         localStorage.setItem('token',res.data.token);
-        hashHistory.push('/user/user-list');
+        //redirection to user-list page
+        self.context.router.push('/user-list');
       }
     })
     .catch(function (error) {
@@ -62,5 +62,12 @@ class SignUpUser extends Component{
     });
   }
 }
+
+//You have to define the contextTypes as follows right beneath your component:
+//to avoid this waring : Warning: [react-router] props.history and context.history are deprecated. Please use context.router
+//this comes when we try to redirect with this.context.router.push
+SignUpUser.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 
 export default SignUpUser;
