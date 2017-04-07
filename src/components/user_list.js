@@ -22,7 +22,7 @@ class UserList extends Component{
                   <div className="pull-left">{user.name}</div>
                   <div className="pull-right">
                     <button type="button" className="btn btn-danger" onClick={event=>this.submitForm(event)}>Delete</button>
-                    <button type="button" className="btn btn-info" onClick={event=>this.submitForm(event)}>Edit</button>
+                    <button type="button" className="btn btn-info" onClick={event=>this.goToEditUser(event)}>Edit</button>
                   </div>
                 </li>
               })}
@@ -33,6 +33,7 @@ class UserList extends Component{
       </div>
     );
   }
+
   componentDidMount() {
     // Is there a React-y way to avoid rebinding `this`? fat arrow?
     var self = this;
@@ -58,6 +59,10 @@ class UserList extends Component{
   }
   componentWillUnmount() {
     this.serverRequest.abort();
+  }
+
+  goToEditUser(){
+    this.context.router.push('/edit-user');
   }
 }
 

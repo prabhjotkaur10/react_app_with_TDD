@@ -11,7 +11,7 @@ import App from './components/app';
 import Signup from './components/sign_up';
 import Signin from './components/sign_in';
 import Userlist from './components/user_list';
-// import Userlist from './components/user_list';
+import EditUser from './components/edit_user';
 
 
 
@@ -24,6 +24,7 @@ render((
       <Route path="sign-up" component={Signup}/>
       <Route path="sign-in" component={Signin}/>
       <Route path="user-list" component={Userlist}/>
+      <Route path="edit-user" component={EditUser}/>
     </Route>
 
 
