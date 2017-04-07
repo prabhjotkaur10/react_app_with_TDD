@@ -10,6 +10,19 @@ class UserList extends Component{
     this.state={users:[]};
   }
 
+  renderList(){
+    return this.state.users.map(function(user){
+       return (<li key={user.id} className="list-group-item clearfix">
+        <div className="pull-left">{user.name}</div>
+        <div className="pull-right">
+          {/*<button type="button" className="btn btn-info" onClick={event => self.goToEditUser(user.id)}>Edit</button>*/}
+          <Link className="btn btn-info" to={'/user/edit-user/'+user.id}>Edit</Link>
+          <button type="button" className="btn btn-danger" onClick={event=>self.deleteUser(user.id)}>Delete</button>
+        </div>
+      </li>)
+    })
+  }
+
   render(){
     var self = this;
     return (
@@ -18,16 +31,7 @@ class UserList extends Component{
           <div className="row">
             <div className="col-md-12">
               <ul className="list-group">
-              {this.state.users.map(function(user){
-                 return <li key={user.id} className="list-group-item clearfix">
-                  <div className="pull-left">{user.name}</div>
-                  <div className="pull-right">
-                    {/*<button type="button" className="btn btn-info" onClick={event => self.goToEditUser(user.id)}>Edit</button>*/}
-                    <Link className="btn btn-info" to={'/user/edit-user/'+user.id}>Edit</Link>
-                    <button type="button" className="btn btn-danger" onClick={event=>self.deleteUser(user.id)}>Delete</button>
-                  </div>
-                </li>
-              })}
+              {this.renderList()}
               </ul>
             </div>
           </div>
