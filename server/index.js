@@ -4,6 +4,8 @@ var connection = require('./db');
 var pgp        = require('pg-promise')();
 var bodyParser = require('body-parser');
 var jwt        = require('jsonwebtoken');
+var cors       = require('cors');
+
 // secretKey to sign jwt token
 var secretKey  = 'khuljasimsim';
 
@@ -25,6 +27,18 @@ var db = pgp(cn);
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+//cors configuration
+var whitelist = ['http://localhost:5000']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+app.options('*', cors(corsOptions));
  // Authenticate user
  function authenticate(req,res,next){
    var token = req.headers['x-access-token'];
@@ -48,6 +62,14 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
     }
  }
+
+ app.all('/*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,     Content-Type");
+    next();
+});
+
 
 app.get('/',function(req,res){
   res.send('Welcome to express')
@@ -75,16 +97,21 @@ app.get('/users/:id',authenticate,function(req,res){
     });
 })
 // create user post request
-app.post('/create_user', function(req, res) {
+app.post('/create_user', cors(corsOptions), function(req, res) {
     var name          = req.body.name;
     var phone_number  = req.body.phone_number;
     var password      = req.body.password;
 
     db.none('insert into dummy_users(name,phone_number,password) values($1, $2, $3)', [name, phone_number, password])
      .then(() => {
+           var token = jwt.sign({
+               phone_number: phone_number
+           }, new Buffer(secretKey, 'base64'), { expiresIn: '24h' });
           res.json({
             data:{
-              success:true
+              success:true,
+              message:"User successfully created.",
+              token:token
             }
           });
      })

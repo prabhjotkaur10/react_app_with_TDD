@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import SignUpUser from './sign_up';
-
+import TopNav from './top_nav';
 
 export default class App extends Component {
   render() {
     return (
-      <SignUpUser/>
+      <div>
+        <TopNav/>
+        {this.props.children || <SignUpUser/>}
+      </div>
     );
   }
 }

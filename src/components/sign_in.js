@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Router, Route, hashHistory } from 'react-router';
 const baseUrl = 'http://localhost:4000';
+import { Router, Route, hashHistory } from 'react-router';
 
-class SignUpUser extends Component{
+class SignInUser extends Component{
   constructor(props){
     super(props);
-    this.state={name:'',phone_number:'',password:''};
+    this.state={phone_number:'',password:''};
   }
 
   render(){
@@ -16,13 +16,9 @@ class SignUpUser extends Component{
           <div className="row">
             <div className="col-md-6 col-md-offset-3">
               <div className="panel panel-primary">
-                <div className="panel-heading">Sign Up</div>
+                <div className="panel-heading">Sign In</div>
                 <div className="panel-body">
                   <form>
-                  <div className="form-group">
-                    <label>Name</label>
-                    <input className="form-control"  value={this.state.name} onChange={event=>this.setState({name:event.target.value})}/>
-                  </div>
                     <div className="form-group">
                       <label>Phone Number</label>
                       <input className="form-control" value={this.state.phone_number} onChange={event=>this.setState({phone_number:event.target.value})}/>
@@ -31,7 +27,7 @@ class SignUpUser extends Component{
                       <label>Password</label>
                       <input className="form-control" type="password" value={this.state.password} onChange={event=>this.setState({password:event.target.value})}/>
                     </div>
-                    <button type="button" className="btn btn-success" onClick={event=>this.submitForm(event)}>Sign Up</button>
+                    <button type="button" className="btn btn-success" onClick={event=>this.signIn(event)}>Sign In</button>
                   </form>
                 </div>
               </div>
@@ -41,18 +37,16 @@ class SignUpUser extends Component{
       </div>
     );
   }
-  submitForm(){
+  signIn(){
     let self = this;
-    axios.post(baseUrl+'/create_user', {
-      name: this.state.name,
+    axios.post(baseUrl+'/sign_in', {
       phone_number: this.state.phone_number,
       password: this.state.password
     })
     .then(function (response) {
       let res = response.data;
-      console.log(res);
       if(res.data.success==true){
-        self.setState({name:'',phone_number:'',password:''});
+        self.setState({phone_number:'',password:''});
         localStorage.setItem('token',res.data.token);
         hashHistory.push('/user-list');
       }
@@ -63,4 +57,4 @@ class SignUpUser extends Component{
   }
 }
 
-export default SignUpUser;
+export default SignInUser;
