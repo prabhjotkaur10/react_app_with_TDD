@@ -50,7 +50,7 @@ class SignInUser extends Component{
         self.setState({phone_number:'',password:'',error:''});
         localStorage.setItem('token',res.data.token);
         //redirection to user-list page
-        self.context.router.push('/user-list');
+        self.context.router.push('/user/user-list');
       }
       else{
         self.setState({error:'Wrong phone number or password'});

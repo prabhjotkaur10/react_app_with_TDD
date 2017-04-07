@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Router, Route } from 'react-router';
+import { Link, Router, Route } from 'react-router';
 const baseUrl = 'http://localhost:4000';
 
 class UserList extends Component{
@@ -21,8 +21,8 @@ class UserList extends Component{
                  return <li key={user.id} className="list-group-item clearfix">
                   <div className="pull-left">{user.name}</div>
                   <div className="pull-right">
+                    <Link className="btn btn-info" to={'/user/edit-user/'+user.id}>Edit</Link>
                     <button type="button" className="btn btn-danger" onClick={event=>this.submitForm(event)}>Delete</button>
-                    <button type="button" className="btn btn-info" onClick={event=>this.goToEditUser(event)}>Edit</button>
                   </div>
                 </li>
               })}

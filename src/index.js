@@ -27,7 +27,7 @@ render((
     </Route>
     <Route path="/user" component={TopNavLoggedIn}>
       <Route path="user-list" component={Userlist}/>
-      <Route path="edit-user" component={EditUser}/>
+      <Route path="edit-user/:id" component={EditUser}/>
     </Route>
 
 

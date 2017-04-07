@@ -54,7 +54,7 @@ class SignUpUser extends Component{
         self.setState({name:'',phone_number:'',password:''});
         localStorage.setItem('token',res.data.token);
         //redirection to user-list page
-        self.context.router.push('/user-list');
+        self.context.router.push('/user/user-list');
       }
     })
     .catch(function (error) {
