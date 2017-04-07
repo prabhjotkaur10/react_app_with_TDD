@@ -11,6 +11,7 @@ class UserList extends Component{
   }
 
   render(){
+    var self = this;
     return (
       <div>
         <div className="container">
@@ -22,7 +23,7 @@ class UserList extends Component{
                   <div className="pull-left">{user.name}</div>
                   <div className="pull-right">
                     <Link className="btn btn-info" to={'/user/edit-user/'+user.id}>Edit</Link>
-                    <button type="button" className="btn btn-danger" onClick={event=>this.submitForm(event)}>Delete</button>
+                    <button type="button" className="btn btn-danger" onClick={event=>self.deleteUser(user.id)}>Delete</button>
                   </div>
                 </li>
               })}
@@ -33,23 +34,26 @@ class UserList extends Component{
       </div>
     );
   }
-
+  getData(token){
+    let self=this;
+    this.serverRequest = axios({
+      method:'get',
+      url:baseUrl+'/users',
+      headers: {'x-access-token': token}
+    })
+    .then(function (response) {
+      self.setState({users:response.data});
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
   componentDidMount() {
     // Is there a React-y way to avoid rebinding `this`? fat arrow?
     var self = this;
     let token = localStorage.getItem('token');
     if(token){
-      this.serverRequest = axios({
-        method:'get',
-        url:baseUrl+'/users',
-        headers: {'x-access-token': token}
-      })
-      .then(function (response) {
-        self.setState({users:response.data});
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      this.getData(token);
     }
     else{
       self.context.router.push('/sign-in');
@@ -60,10 +64,28 @@ class UserList extends Component{
       this.serverRequest.abort();
     }
 
-  }
+  };
 
-  goToEditUser(){
-    this.context.router.push('/edit-user');
+  deleteUser(user_id){
+    let self = this;
+    let token = localStorage.getItem('token');
+    axios({
+      method:'post',
+      url:baseUrl+'/delete_user',
+      headers: {'x-access-token': token},
+      data:{
+        id:user_id
+      }
+    })
+    .then(function (response) {
+      let res = response.data.data;
+        if(res.success==true){
+          self.getData(token);
+        }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 }
 

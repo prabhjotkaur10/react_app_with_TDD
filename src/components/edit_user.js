@@ -6,8 +6,10 @@ import { Router, Route } from 'react-router';
 
 class EditUser extends Component{
   constructor(props){
+    console.log()
     super(props);
-    this.state={};
+    this.state = {user_id:props.params.id,name:'',phone_number:'',password:''};
+
   }
 
   render(){
@@ -22,7 +24,7 @@ class EditUser extends Component{
                   <form>
                   	<div className="form-group">
                       <label>Name</label>
-                      <input className="form-control" value={this.state.name} onChange={event=>this.setState({phone_number:event.target.value})}/>
+                      <input className="form-control" value={this.state.name} onChange={event=>this.setState({name:event.target.value})}/>
                     </div>
                     <div className="form-group">
                       <label>Phone Number</label>
@@ -32,8 +34,8 @@ class EditUser extends Component{
                       <label>Password</label>
                       <input className="form-control" type="password" value={this.state.password} onChange={event=>this.setState({password:event.target.value})}/>
                     </div>
-                    <button type="button" className="btn btn-success" onClick={event=>this.editUser(event)}>Edit</button>
-                    <button type="button" className="btn btn-success" onClick={event=>this.cancel(event)}>Cancel</button>
+                    <button type="button" className="btn btn-success" onClick={event=>this.editUser(event)}>Update</button>
+                    <button type="button" className="btn btn-default" onClick={event=>this.back(event)}>back</button>
                   </form>
                 </div>
               </div>
@@ -43,10 +45,68 @@ class EditUser extends Component{
       </div>
     );
   }
+  componentDidMount() {
+    // Is there a React-y way to avoid rebinding `this`? fat arrow?
+    var self = this;
+    let token = localStorage.getItem('token');
+    if(token){
+      this.serverRequest = axios({
+        method:'get',
+        url:baseUrl+'/users/'+this.state.user_id,
+        headers: {'x-access-token': token}
+      })
+      .then(function (response) {
+        let user = response.data;
+        self.setState({name:user.name,phone_number:user.phone_number,password:user.password});
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+    else{
+      self.context.router.push('/sign-in');
+    }
+  }
+  componentWillUnmount() {
+    if(typeof this.serverRequest.abort=='function'){
+      this.serverRequest.abort();
+    }
+
+  }
   editUser(){
     let self = this;
+    let token = localStorage.getItem('token');
+    if(token){
+      axios({
+        method:'post',
+        url:baseUrl+'/update_user',
+        headers: {'x-access-token': token},
+        data:{
+          id:self.state.user_id,
+          name:self.state.name,
+          phone_number:self.state.phone_number,
+          password:self.state.password
+        }
+      })
+      .then(function (response) {
+        let res = response.data.data;
+          if(res.success==true){
+            self.context.router.push('/user/user-list');
+          }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+    else{
+      self.context.router.push('/sign-in');
+    }
+  };
+  back(){
+    this.context.router.push('/user/user-list');
   }
 }
+
 
 //You have to define the contextTypes as follows right beneath your component:
 //to avoid this waring : Warning: [react-router] props.history and context.history are deprecated. Please use context.router

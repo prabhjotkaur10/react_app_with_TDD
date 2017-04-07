@@ -90,7 +90,7 @@ app.get('/users/:id',authenticate,function(req,res){
   db.any("select * from dummy_users where id=$1", [req.params.id])
     .then(data => {
         // success;
-        res.json(data);
+        res.json(data[0]);
     })
     .catch(error => {
         res.json(error);
@@ -125,7 +125,7 @@ app.post('/create_user', cors(corsOptions), function(req, res) {
          });
      });
 });
-// user sign in
+// update user
 app.post('/sign_in',function(req,res){
   var phone_number  = req.body.phone_number;
   var password      = req.body.password;
@@ -160,6 +160,44 @@ app.post('/sign_in',function(req,res){
     });
 
 })
+
+app.post('/update_user',cors(corsOptions),function(req,res){
+  var id          = req.body.id;
+  var name          = req.body.name;
+  var phone_number  = req.body.phone_number;
+  var password      = req.body.password;
+
+  db.none("update dummy_users set name=$1,phone_number=$2,password=$3 where id=$4 ", [name,phone_number,password,id])
+    .then(data => {
+      res.json({
+        data:{
+          success:true,
+          message:"User Updated successfully"
+        }
+      })
+    })
+    .catch(error => {
+        res.json(error.message);
+    });
+
+})
+app.post('/delete_user',cors(corsOptions),function(req,res){
+  var id = req.body.id;
+  db.none("delete from dummy_users where id=$1 ", [id])
+    .then(data => {
+      res.json({
+        data:{
+          success:true,
+          message:"User Deleted successfully"
+        }
+      })
+    })
+    .catch(error => {
+        res.json(error.message);
+    });
+
+})
+
 
 var server = app.listen('4000',function(){
   console.log('Server runing at http://localhost:'+server.address().port);
