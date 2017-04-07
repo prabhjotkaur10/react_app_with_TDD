@@ -54,7 +54,7 @@ class SignUpUser extends Component{
       if(res.data.success==true){
         self.setState({name:'',phone_number:'',password:''});
         localStorage.setItem('token',res.data.token);
-        hashHistory.push('/user-list');
+        hashHistory.push('/user/user-list');
       }
     })
     .catch(function (error) {

@@ -44,9 +44,7 @@ class UserList extends Component{
         headers: {'x-access-token': token}
       })
       .then(function (response) {
-        console.log(response.data);
         self.setState({users:response.data});
-        // console.log(self.state.users)
       })
       .catch(function (error) {
         console.log(error);
@@ -57,7 +55,10 @@ class UserList extends Component{
     }
   }
   componentWillUnmount() {
-    this.serverRequest.abort();
+    if(typeof this.serverRequest.abort=='function'){
+      this.serverRequest.abort();
+    }
+
   }
 }
 
