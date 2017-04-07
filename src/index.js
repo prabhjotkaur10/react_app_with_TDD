@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM,{ render } from 'react-dom';
-import { Router, Route, hashHistory, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute } from 'react-router';
+//this is to avoid hash in url and url junk string, so used browserHistory
+import useRouterHistory from 'react-router/lib/useRouterHistory';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+const appHistory = useRouterHistory(createBrowserHistory)({ queryKey: false });
 
 //import external files
 import App from './components/app';
@@ -14,7 +18,7 @@ import Userlist from './components/user_list';
 
 
 render((
-  <Router history={hashHistory}>
+  <Router history={appHistory}>
   	<Route path="/" component={App}>
       <IndexRoute component={Signup}/>
       <Route path="sign-up" component={Signup}/>

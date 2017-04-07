@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route } from 'react-router';
 const baseUrl = 'http://localhost:4000';
 
 class UserList extends Component{
@@ -53,12 +53,19 @@ class UserList extends Component{
       });
     }
     else{
-      hashHistory.push('/sign-in');
+      self.context.router.push('/sign-in');
     }
   }
   componentWillUnmount() {
     this.serverRequest.abort();
   }
 }
+
+//You have to define the contextTypes as follows right beneath your component:
+//to avoid this waring : Warning: [react-router] props.history and context.history are deprecated. Please use context.router
+//this comes when we try to redirect with this.context.router.push
+UserList.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 
 export default UserList;
