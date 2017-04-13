@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link,Router, Route, hashHistory} from 'react-router';
+import {Link,Router, Route} from 'react-router';
 
 
 class TopNavLoggedIn extends Component{
@@ -34,7 +34,14 @@ class TopNavLoggedIn extends Component{
   };
   logout(){
     localStorage.removeItem('token');
-    hashHistory.push('/sign-in');
+    this.context.router.push('/sign-in');
   }
 }
+
+//You have to define the contextTypes as follows right beneath your component:
+//to avoid this waring : Warning: [react-router] props.history and context.history are deprecated. Please use context.router
+//this comes when we try to redirect with this.context.router.push
+TopNavLoggedIn.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 export default TopNavLoggedIn;

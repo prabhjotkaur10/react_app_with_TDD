@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM,{ render } from 'react-dom';
-import { Router, Route, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 //this is to avoid hash in url and url junk string, so used browserHistory
-import useRouterHistory from 'react-router/lib/useRouterHistory';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
-const appHistory = useRouterHistory(createBrowserHistory)({ queryKey: false });
+// import useRouterHistory from 'react-router/lib/useRouterHistory';
+// import createBrowserHistory from 'history/lib/createBrowserHistory';
+// const appHistory = useRouterHistory(createBrowserHistory)({ queryKey: false });
 
 //import external files
 import App from './components/app';
@@ -19,7 +19,7 @@ import EditUser from './components/edit_user';
 
 
 render((
-  <Router history={appHistory}>
+  <Router history={browserHistory}>
   	<Route path="/" component={App}>
       <IndexRoute component={Signup}/>
       <Route path="sign-up" component={Signup}/>
