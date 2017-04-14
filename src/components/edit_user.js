@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {fetchUser} from '../actions/index';
+import {fetchUser, editUser} from '../actions/index';
 import {bindActionCreators} from 'redux';
 import { Router, Route } from 'react-router';
 
@@ -14,13 +14,16 @@ class EditUser extends Component{
   //   this.state = {user_id:props.params.id,name:'',phone_number:'',password:''};
 
   // }
+  constructor(props) {
+    super(props);
+  }
+
   componentWillMount(){
     this.props.fetchUser(this.props.params.id);
   }
 
   render(){
     const {user} = this.props;
-    console.log(this.props);
     if(!user){
         return <div>Loading...</div>
       }
@@ -32,20 +35,20 @@ class EditUser extends Component{
               <div className="panel panel-primary">
                 <div className="panel-heading">Edit User Details</div>
                 <div className="panel-body">
-                  <form>
+                  <form name="edit_form">
                   	<div className="form-group">
                       <label>Name</label>
-                      <input className="form-control" value={user.name} onChange={event=>this.setState({name:event.target.value})}/>
+                      <input className="form-control" defaultValue={user.name} ref="name"/>
                     </div>
                     <div className="form-group">
                       <label>Phone Number</label>
-                      <input className="form-control" value={user.phone_number} onChange={event=>this.setState({phone_number:event.target.value})}/>
+                      <input className="form-control" defaultValue={user.phone_number} ref="phone_number"/>
                     </div>
                     <div className="form-group">
                       <label>Password</label>
-                      <input className="form-control" type="password" value={user.password} onChange={event=>this.setState({password:event.target.value})}/>
+                      <input className="form-control" type="password" defaultValue={user.password} ref="password"/>
                     </div>
-                    <button type="button" className="btn btn-success" onClick={event=>this.editUser(event)}>Update</button>
+                    <button type="button" className="btn btn-success" onClick={event=>this.editUser(this)}>Update</button>
                     <button type="button" className="btn btn-default" onClick={event=>this.back(event)}>back</button>
                   </form>
                 </div>
@@ -55,6 +58,11 @@ class EditUser extends Component{
         </div>
       </div>
     );
+  }
+
+  onInputChange(user){
+    console.log(user);
+    this.setState({user});
   }
   // componentDidMount() {
   //   // Is there a React-y way to avoid rebinding `this`? fat arrow?
@@ -84,34 +92,48 @@ class EditUser extends Component{
   //   }
 
   // }
-  editUser(){
-    let self = this;
-    let token = localStorage.getItem('token');
-    if(token){
-      axios({
-        method:'post',
-        url:baseUrl+'/update_user',
-        headers: {'x-access-token': token},
-        data:{
-          id:self.state.user_id,
-          name:self.state.name,
-          phone_number:self.state.phone_number,
-          password:self.state.password
+  editUser(eve){
+    const name = this.refs.name.value;
+    const phone_number = this.refs.phone_number.value;
+    const password = this.refs.password.value;
+    let params={
+          id:this.props.params.id,
+          name:name,
+          phone_number:phone_number,
+          password:password
         }
-      })
-      .then(function (response) {
-        let res = response.data.data;
-          if(res.success==true){
-            self.context.router.push('/user/user-list');
-          }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    }
-    else{
-      self.context.router.push('/sign-in');
-    }
+        console.log(this);
+    this.props.editUser(params)
+    .then(() =>{
+      this.context.router.push('/user/user-list');
+    })
+    // let self = this;
+    // let token = localStorage.getItem('token');
+    // if(token){
+    //   axios({
+    //     method:'post',
+    //     url:baseUrl+'/update_user',
+    //     headers: {'x-access-token': token},
+    //     data:{
+    //       id:self.state.user_id,
+    //       name:self.state.name,
+    //       phone_number:self.state.phone_number,
+    //       password:self.state.password
+    //     }
+    //   })
+    //   .then(function (response) {
+    //     let res = response.data.data;
+    //       if(res.success==true){
+    //         self.context.router.push('/user/user-list');
+    //       }
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+    // }
+    // else{
+    //   self.context.router.push('/sign-in');
+    // }
   };
   back(){
     this.context.router.push('/user/user-list');
@@ -123,7 +145,7 @@ function mapStateToProps(state){
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({fetchUser}, dispatch);
+  return bindActionCreators({fetchUser, editUser}, dispatch);
 }
 
 function componentWillUnmount() {

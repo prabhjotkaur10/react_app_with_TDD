@@ -4,6 +4,7 @@ export const FETCH_USERS = 'FETCH_USERS';
 export const CREATE_USER = 'CREATE_USER';
 export const FETCH_USER = 'FETCH_USER';
 export const SIGNIN_USER = 'SIGNIN_USER';
+export const EDIT_USER = 'EDIT_USER';
 
 const ROOT_URL = 'http://localhost:4000';
 
@@ -27,6 +28,14 @@ export function createUser(props){
   const request = axios.post(`${ROOT_URL}/create_user`, props);
   return{
     type: CREATE_USER,
+    payload: request
+  };
+}
+
+export function editUser(props){
+  const request = axios.post(`${ROOT_URL}/update_user`, props);
+  return{
+    type: EDIT_USER,
     payload: request
   };
 }
