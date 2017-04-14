@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import { Router, Route } from 'react-router';
+import {connect} from 'react-redux';
+import {createUser} from '../actions/index';
+import {bindActionCreators} from 'redux';
 const baseUrl = 'http://localhost:4000';
 
 class SignUpUser extends Component{
@@ -21,15 +24,15 @@ class SignUpUser extends Component{
                   <form>
                   <div className="form-group">
                     <label>Name</label>
-                    <input className="form-control"  value={this.state.name} onChange={event=>this.setState({name:event.target.value})}/>
+                    <input className="form-control"  ref="name"/>
                   </div>
                     <div className="form-group">
                       <label>Phone Number</label>
-                      <input className="form-control" value={this.state.phone_number} onChange={event=>this.setState({phone_number:event.target.value})}/>
+                      <input className="form-control" ref="phone_number"/>
                     </div>
                     <div className="form-group">
                       <label>Password</label>
-                      <input className="form-control" type="password" value={this.state.password} onChange={event=>this.setState({password:event.target.value})}/>
+                      <input className="form-control" type="password" ref="password"/>
                     </div>
                     <button type="button" className="btn btn-success" onClick={event=>this.submitForm(event)}>Sign Up</button>
                   </form>
@@ -43,23 +46,46 @@ class SignUpUser extends Component{
   }
   submitForm(){
     let self = this;
-    axios.post(baseUrl+'/create_user', {
-      name: this.state.name,
-      phone_number: this.state.phone_number,
-      password: this.state.password
-    })
-    .then(function (response) {
-      let res = response.data;
-      if(res.data.success==true){
-        self.setState({name:'',phone_number:'',password:''});
-        localStorage.setItem('token',res.data.token);
-        //redirection to user-list page
-        self.context.router.push('/user/user-list');
+    let params={
+        name:this.refs.name.value,
+        phone_number:this.refs.phone_number.value,
+        password:this.refs.password.value
       }
+    this.props.createUser(params)
+    .then(() =>{
+      this.context.router.push('/user/user-list');
     })
-    .catch(function (error) {
-      console.log(error);
-    });
+    // axios.post(baseUrl+'/create_user', {
+    //   name: this.state.name,
+    //   phone_number: this.state.phone_number,
+    //   password: this.state.password
+    // })
+    // .then(function (response) {
+    //   let res = response.data;
+    //   if(res.data.success==true){
+    //     self.setState({name:'',phone_number:'',password:''});
+    //     localStorage.setItem('token',res.data.token);
+    //     //redirection to user-list page
+    //     self.context.router.push('/user/user-list');
+    //   }
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    // });
+  }
+}
+
+function mapStateToProps(state){
+  return {user: state.users.user}
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({createUser}, dispatch);
+}
+
+function componentWillUnmount() {
+  if(typeof this.serverRequest.abort=='function'){
+    this.serverRequest.abort();
   }
 }
 
@@ -70,4 +96,4 @@ SignUpUser.contextTypes = {
   router: React.PropTypes.object.isRequired
 };
 
-export default SignUpUser;
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpUser);

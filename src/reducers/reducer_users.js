@@ -1,5 +1,7 @@
 import {FETCH_USERS} from "../actions/index";
 import {FETCH_USER} from "../actions/index";
+import {CREATE_USER} from "../actions/index";
+
 
 const INITIAL_STATE = { all: [], user: null};
 
@@ -12,6 +14,8 @@ export default function(state = INITIAL_STATE, action) {
     case FETCH_USER:
     console.log(action.payload.data);
       return { ...state, user: action.payload.data};
+    // case CREATE_USER:
+    //   console.log(action.payload.data);
     default:
       return state;
   }
