@@ -67,12 +67,6 @@ class UserList extends Component{
   //     self.context.router.push('/sign-in');
   //   }
   // }
-  componentWillUnmount() {
-    if(typeof this.serverRequest.abort=='function'){
-      this.serverRequest.abort();
-    }
-
-  };
 
   // deleteUser(user_id){
   //   let self = this;
@@ -98,12 +92,18 @@ class UserList extends Component{
 }
 
 function mapStateToProps(state){
-    return { users: state.users.all}
+  return { users: state.users.all}
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({fetchUsers}, dispatch);
 }
+
+function componentWillUnmount() {
+  if(typeof this.serverRequest.abort=='function'){
+    this.serverRequest.abort();
+  }
+};
 //You have to define the contextTypes as follows right beneath your component:
 //to avoid this waring : Warning: [react-router] props.history and context.history are deprecated. Please use context.router
 //this comes when we try to redirect with this.context.router.push

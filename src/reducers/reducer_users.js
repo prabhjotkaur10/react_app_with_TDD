@@ -10,6 +10,7 @@ export default function(state = INITIAL_STATE, action) {
       return { ...state, all: action.payload.data };
       //ES6 version for concat
     case FETCH_USER:
+    console.log(action.payload.data);
       return { ...state, user: action.payload.data};
     default:
       return state;
