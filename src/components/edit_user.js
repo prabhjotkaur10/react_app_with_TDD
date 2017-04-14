@@ -59,11 +59,6 @@ class EditUser extends Component{
       </div>
     );
   }
-
-  onInputChange(user){
-    console.log(user);
-    this.setState({user});
-  }
   // componentDidMount() {
   //   // Is there a React-y way to avoid rebinding `this`? fat arrow?
   //   var self = this;

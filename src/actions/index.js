@@ -5,6 +5,7 @@ export const CREATE_USER = 'CREATE_USER';
 export const FETCH_USER = 'FETCH_USER';
 export const SIGNIN_USER = 'SIGNIN_USER';
 export const EDIT_USER = 'EDIT_USER';
+export const DELETE_USER = 'DELETE_USER';
 
 const ROOT_URL = 'http://localhost:4000';
 
@@ -36,6 +37,14 @@ export function editUser(props){
   const request = axios.post(`${ROOT_URL}/update_user`, props);
   return{
     type: EDIT_USER,
+    payload: request
+  };
+}
+
+export function deleteUser(props){
+  const request = axios.post(`${ROOT_URL}/delete_user`, props);
+  return{
+    type: DELETE_USER,
     payload: request
   };
 }

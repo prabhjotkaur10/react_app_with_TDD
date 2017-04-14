@@ -1,32 +1,41 @@
 import React, {Component} from 'react';
 // import axios from 'axios';
 import {connect} from 'react-redux';
-import {fetchUsers} from '../actions/index';
+import {fetchUsers, deleteUser} from '../actions/index';
 import { Link, Router, Route } from 'react-router';
 import {bindActionCreators} from 'redux';
 
 const baseUrl = 'http://localhost:4000';
 
 class UserList extends Component{
+  constructor(){
+    super();
+    // this.deleteUserFn = this.deleteUserFn.bind(this);
+  }
   componentWillMount(){ // to fetch the data as soon as DOM is rendered
+    console.log(this.props);
     this.props.fetchUsers();
   }
 
   renderList(){
+    var self = this;
     return this.props.users.map(function(user){
        return (<li key={user.id} className="list-group-item clearfix">
         <div className="pull-left">{user.name}</div>
         <div className="pull-right">
           {/*<button type="button" className="btn btn-info" onClick={event => self.goToEditUser(user.id)}>Edit</button>*/}
           <Link className="btn btn-info" to={'/user/edit-user/'+user.id}>Edit</Link>
-          <button type="button" className="btn btn-danger" onClick={event=>self.deleteUser(user.id)}>Delete</button>
+          <button type="button" className="btn btn-danger" onClick={(e) => self.deleteUserFn(e, user.id)}>Delete</button>
         </div>
       </li>)
     })
   }
 
   render(){
-    var self = this;
+    const {users} = this.props;
+    if(!users){
+      return <div>Loading...</div>
+    }
     return (
       <div>
         <div className="container">
@@ -89,6 +98,19 @@ class UserList extends Component{
   //     console.log(error);
   //   });
   // }
+
+  deleteUserFn(e,user_id){
+    console.log(user_id);
+    let params = {
+      id : user_id
+    }
+    var self = this.props;
+    this.props.deleteUser(params)
+    .then(function (response) {
+      console.log(response)
+      self.fetchUsers();
+    })
+  }
 }
 
 function mapStateToProps(state){
@@ -96,7 +118,7 @@ function mapStateToProps(state){
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({fetchUsers}, dispatch);
+  return bindActionCreators({fetchUsers, deleteUser}, dispatch);
 }
 
 function componentWillUnmount() {
