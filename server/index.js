@@ -75,7 +75,7 @@ app.get('/',function(req,res){
   res.send('Welcome to express')
 })
 
-app.get('/users',authenticate,function(req,res){
+app.get('/users',function(req,res){
   db.any("select * from dummy_users  order by id limit 10")
     .then(data => {
         // success;
@@ -86,7 +86,7 @@ app.get('/users',authenticate,function(req,res){
     });
 })
 
-app.get('/users/:id',authenticate,function(req,res){
+app.get('/users/:id',function(req,res){
   db.any("select * from dummy_users where id=$1", [req.params.id])
     .then(data => {
         // success;
